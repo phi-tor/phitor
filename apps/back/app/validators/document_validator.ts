@@ -6,19 +6,19 @@ import vine from '@vinejs/vine'
 export const createDocumentValidator = vine.compile(
   vine.object({
     title: vine.string(),
-    lang: vine.string().nullable(),
-    description: vine.string().escape().nullable(),
-    tags: vine.string().escape().nullable(),
+    lang: vine.string().optional(),
+    description: vine.string().escape().optional(),
+    tags: vine.string().escape().optional(),
     content: vine.string().escape(),
   })
 )
 
 export const updateDocumentValidator = vine.compile(
   vine.object({
-    title: vine.string().nullable(),
-    lang: vine.string().nullable(),
-    description: vine.string().escape().nullable(),
-    tags: vine.string().escape().nullable(),
-    content: vine.string().escape().nullable(),
+    title: vine.string().optional(),
+    lang: vine.string().optional(),
+    description: vine.string().escape().optional(),
+    tags: vine.string().escape().optional(),
+    content: vine.string().escape().optional(),
   })
 )
