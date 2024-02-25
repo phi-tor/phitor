@@ -17,6 +17,7 @@ export default class AuthController {
 
     return response.redirect('/users/me')
   }
+
   async login({ request, auth, response }: HttpContext) {
     const data = request.all()
     const payload = await loginValidator.validate(data)

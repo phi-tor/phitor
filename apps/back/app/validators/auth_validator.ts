@@ -22,7 +22,8 @@ export const registerValidator = vine.compile(
           .where('username', value)
           .first()
         return !user
-      }),
+      })
+      .escape(),
     email: vine
       .string()
       .email()
