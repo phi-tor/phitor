@@ -23,6 +23,9 @@ export default class Document extends BaseModel {
   @column()
   declare content: string
 
+  @column()
+  declare isPublic: boolean
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

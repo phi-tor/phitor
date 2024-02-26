@@ -14,7 +14,8 @@ export default class DocumentsController {
       lang: payload.lang ? payload.lang : user.lang, // if user manually changed the lang, use the lang from the request
       description: payload.description,
       tags: payload.tags,
-      content: payload.content
+      content: payload.content,
+      isPublic: payload.isPublic ? payload.isPublic : false
     })
 
     return response.json(newDoc)

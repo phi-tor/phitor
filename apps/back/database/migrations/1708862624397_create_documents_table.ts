@@ -18,6 +18,7 @@ export default class extends BaseSchema {
       table.string('description').nullable()
       table.string('tags').nullable()
       table.string('content')
+      table.boolean('is_public').defaultTo(false)
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

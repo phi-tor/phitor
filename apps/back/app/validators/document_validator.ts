@@ -10,6 +10,7 @@ export const createDocumentValidator = vine.compile(
     description: vine.string().escape().optional(),
     tags: vine.string().escape().optional(),
     content: vine.string().escape(),
+    isPublic: vine.boolean().optional(),
   })
 )
 
@@ -20,5 +21,6 @@ export const updateDocumentValidator = vine.compile(
     description: vine.string().escape().optional(),
     tags: vine.string().escape().optional(),
     content: vine.string().escape().optional(),
+    isPublic: vine.boolean().optional(),
   })
 )
