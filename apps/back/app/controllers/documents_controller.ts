@@ -41,13 +41,7 @@ export default class DocumentsController {
     const data = request.all()
     const payload = await updateDocumentValidator.validate(data)
 
-    // find a way to summarize this
-    doc.title = payload.title ? payload.title : doc.title
-    doc.lang = payload.lang ? payload.lang : doc.lang
-    doc.description = payload.description ? payload.description : doc.description
-    doc.tags = payload.tags ? payload.tags : doc.tags
-    doc.content = payload.content ? payload.content : doc.content
-
+    doc.merge(payload)
     await doc.save()
 
     return response.json(doc)
