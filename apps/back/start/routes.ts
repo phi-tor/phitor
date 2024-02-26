@@ -8,6 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import {HttpContext} from "@adonisjs/core/http"
 
 import AuthController from "#controllers/auth_controller"
 import UsersController from "#controllers/users_controller"
@@ -20,6 +21,11 @@ router.get('/', async () => {
   return {
     hello: 'world',
   }
+})
+
+router.get('/robots.txt', async ({ response }: HttpContext) => {
+  response.header('Content-Type', 'text/plain')
+  return response.send('User-agent: *\nDisallow: /')
 })
 
 // auth
