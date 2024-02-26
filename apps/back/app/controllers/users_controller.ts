@@ -9,6 +9,7 @@ export default class UsersController {
       .where('id', userId)
       .preload('documents')
       .preload('profileId')
+      .preload('badges')
     return response.json(user)
   }
 }

@@ -7,6 +7,7 @@ import type {HasMany, HasOne} from '@adonisjs/lucid/types/relations'
 
 import Document from "#models/document"
 import Profile from "#models/profile";
+import Badge from "#models/badge"
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['username', 'email'],
@@ -31,6 +32,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => Document, { serializeAs: 'documents' })
   declare documents: HasMany<typeof Document>
+
+  @hasMany(() => Badge, { serializeAs: 'badges' })
+  declare badges: HasMany<typeof Badge>
 
   @hasOne(() => Profile, { serializeAs: 'profile' })
   declare profileId: HasOne<typeof Profile>

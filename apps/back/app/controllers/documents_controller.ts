@@ -37,7 +37,7 @@ export default class DocumentsController {
     const doc = await Document.findOrFail(params['id'])
 
     // a user tries to update a doc of another
-    if(doc.userId !== user.id) return response.status(403)
+    if(doc.userId !== user.id) return response.status(401)
 
     const data = request.all()
     const payload = await updateDocumentValidator.validate(data)
@@ -48,8 +48,12 @@ export default class DocumentsController {
     return response.json(doc)
   }
 
-  async delete({ params, response }: HttpContext){
+  async delete({ auth, params, response }: HttpContext){
+    const user = auth.getUserOrFail()
     const doc = await Document.findOrFail(params['id'])
+
+    if(doc.userId !== user.id) return response.status(401)
+
     await doc.delete()
     return response.status(200)
   }

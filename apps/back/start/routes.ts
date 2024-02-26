@@ -19,7 +19,7 @@ import ProfilesController from "#controllers/profiles_controller"
 
 router.get('/', async () => {
   return {
-    hello: 'world',
+    msg: "hey you! go on the app, you're not a fetch, do you?",
   }
 })
 
