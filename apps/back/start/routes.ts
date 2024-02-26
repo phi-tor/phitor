@@ -13,6 +13,7 @@ import AuthController from "#controllers/auth_controller"
 import UsersController from "#controllers/users_controller"
 import {middleware} from "#start/kernel"
 import DocumentsController from "#controllers/documents_controller"
+import ProfilesController from "#controllers/profiles_controller"
 
 
 router.get('/', async () => {
@@ -37,6 +38,14 @@ router
 router
   .group(() => {
     router.get('me', [UsersController, 'me']).as('me')
+
+    router.group(() => {
+      router.get(':userId', [ProfilesController, 'get']).as('get')
+
+      router.put(':userId', [ProfilesController, 'update']).as('update')
+    })
+      .prefix('profiles')
+      .as('profiles')
   })
   .prefix('users')
   .as('users')
