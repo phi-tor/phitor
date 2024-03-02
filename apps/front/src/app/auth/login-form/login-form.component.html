@@ -1,0 +1,16 @@
+<form [formGroup]="loginForm" (ngSubmit)="handleSubmit()">
+  <h1>Log in</h1>
+  <label>
+    Email
+    <input type="email" formControlName="email" />
+  </label>
+  <label>
+    Password
+    <input type="password" formControlName="password" />
+  </label>
+  <div class="btn-container">
+    <button type="submit" [disabled]="!loginForm.valid">Submit</button>
+  </div>
+  <p>You don't have an account yet ? <a href="/auth?action=register">Register</a></p>
+  <p>You forgot your password ? <a href="/auth?action=passwordreset">Reset my password</a></p>
+</form>

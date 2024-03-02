@@ -35,7 +35,12 @@ router
 
     router.post('register', [AuthController, 'register']).as('register')
 
-    router.post('logout', [AuthController, 'logout']).as('logout')
+    router.post('logout', [AuthController, 'logout'])
+      .as('logout')
+      .middleware([
+        middleware.accessToken(),
+        middleware.auth(),
+      ])
   })
   .prefix('auth')
   .as('auth')
@@ -55,7 +60,10 @@ router
   })
   .prefix('users')
   .as('users')
-  .use(middleware.auth())
+  .use([
+    middleware.accessToken(),
+    middleware.auth(),
+  ])
 
 // documents
 router
@@ -72,4 +80,7 @@ router
   })
   .prefix('documents')
   .as('documents')
-  .use(middleware.auth())
+  .use([
+    middleware.accessToken(),
+    middleware.auth(),
+  ])

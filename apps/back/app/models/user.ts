@@ -4,9 +4,10 @@ import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import {BaseModel, column, hasMany, hasOne} from '@adonisjs/lucid/orm'
 import type {HasMany, HasOne} from '@adonisjs/lucid/types/relations'
+import {AccessToken, DbAccessTokensProvider} from "@adonisjs/auth/access_tokens"
 
 import Document from "#models/document"
-import Profile from "#models/profile";
+import Profile from "#models/profile"
 import Badge from "#models/badge"
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
@@ -29,6 +30,16 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare lang: string
+
+  declare currentAccessToken?: AccessToken
+
+  static accessTokens = DbAccessTokensProvider.forModel(User, {
+    expiresIn: '10 days',
+    prefix: 'oat_',
+    table: 'auth_access_tokens',
+    type: 'auth_token',
+    tokenSecretLength: 40,
+  })
 
   @hasMany(() => Document, { serializeAs: 'documents' })
   declare documents: HasMany<typeof Document>

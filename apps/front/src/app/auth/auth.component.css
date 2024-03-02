@@ -1,0 +1,24 @@
+#auth {
+  padding: 15px;
+}
+
+h1 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+p {
+  font-size: 12px;
+  text-align: center
+}
+
+input:not(.checkbox) {
+  width: 100%;
+  padding: 10px;
+}
+
+.btn-container {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+}

@@ -40,6 +40,6 @@ export const registerValidator = vine.compile(
       .minLength(6)
       .confirmed(),
     lang: vine.string(),
-    terms: vine.accepted(),
+    terms: vine.boolean(),
   })
 )
