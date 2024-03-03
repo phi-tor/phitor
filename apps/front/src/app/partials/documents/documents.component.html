@@ -1,0 +1,26 @@
+<p>{{ user?.username }}'s documents</p>
+
+<button (click)="openEditor(tempDocumentForCreate, true)">New</button>
+
+@if (isEditorActive) {
+  <button (click)="closeEditor()">Close</button>
+  {{currentDocumentInEditor?.id}}
+
+  <app-document-editor [user]="user" [document]="currentDocumentInEditor" [mode]="isCreating ? 'create' : 'update'" />
+}
+@else {
+  <div>
+    @for(doc of documents; track doc.id) {
+      <div>
+        <button (click)="openEditor(doc)">Edit</button>
+        <button (click)="deleteDocument(doc.id)">Delete</button>
+        <h3>Title: {{ doc.title }}</h3>
+        <p>Lang: {{ doc.lang }}</p>
+        <p>Public: {{ doc.isPublic ? "yes" : "no" }}</p>
+        <p>Tags: {{ doc.tags ? doc.tags : "none" }}</p>
+        <p>Description: {{ doc.description ? doc.description : "none" }}</p>
+        <span>Creation date: {{ doc.createdAt }} | Last update: {{ doc.updatedAt }}</span>
+      </div>
+    }
+  </div>
+}

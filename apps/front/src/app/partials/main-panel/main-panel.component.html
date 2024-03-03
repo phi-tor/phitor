@@ -1,0 +1,34 @@
+
+{{ action }}
+
+<section id="menu">
+  <button (click)="changeAction('feed')">Feed</button>
+  <button (click)="changeAction('documents')">Documents</button>
+  <button (click)="changeAction('dictionary')">Dictionary</button>
+  <button (click)="changeAction('quizz')">Quizz</button>
+  <button (click)="changeAction('settings')">Settings</button>
+</section>
+
+@switch (action) {
+  @case ('feed') {
+    <app-feed [user]="user" />
+  }
+  @case ('documents') {
+    <app-documents [user]="user" />
+  }
+  @case ('dictionary') {
+    <app-dictionary [user]="user" />
+  }
+  @case ('quizz') {
+    <app-quizz [user]="user" />
+  }
+  @case ('settings') {
+    <app-settings [user]="user" />
+  }
+  @case ('profile') {
+    <app-profile [user]="user" />
+  }
+  @default {
+    <app-feed [user]="user" />
+  }
+}

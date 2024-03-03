@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 
 import {LoginFormComponent} from "./login-form/login-form.component";
@@ -11,10 +11,10 @@ import {RegisterFormComponent} from "./register-form/register-form.component";
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css'
 })
-export class AuthComponent {
+export class AuthComponent implements OnInit {
   constructor(private route: ActivatedRoute) { }
 
-  action: string | null = "login"
+  action?: string = "login"
 
   ngOnInit() {
     const actionParam = this.route.snapshot.queryParamMap.get('action')

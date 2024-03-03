@@ -1,0 +1,37 @@
+<form [formGroup]="documentForm" (ngSubmit)="handleSubmit()">
+  <div id="meta">
+    <label>
+      Title:
+      <input type="text" formControlName="title" [defaultValue]="document?.title" />
+    </label>
+    <label>
+      Lang:
+      <select formControlName="lang">
+        <option value="en" [defaultSelected]="document?.lang === 'en'">EN</option>
+        <option value="fr" [defaultSelected]="document?.lang === 'fr'">FR</option>
+      </select>
+    </label>
+    <label>
+      Description:
+      <textarea formControlName="description" [defaultValue]="document?.description"></textarea>
+    </label>
+    <label>
+      Tags:
+      <input type="text" formControlName="tags" [defaultValue]="document?.tags" />
+    </label>
+    <label>
+      Public:
+      <input type="checkbox" formControlName="isPublic" [defaultChecked]="document?.isPublic" />
+    </label>
+  </div>
+  <div id="editor">
+    <label>
+      Content:
+      <textarea formControlName="content" [defaultValue]="document?.content"></textarea>
+    </label>
+  </div>
+  <div class="btn-container">
+    <button type="submit" [disabled]="!documentForm.valid">{{ mode === "create" ? "Create" : "Edit" }}</button>
+  </div>
+</form>
+

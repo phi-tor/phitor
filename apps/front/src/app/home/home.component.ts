@@ -3,11 +3,12 @@ import {Router} from "@angular/router";
 
 import {UserService} from "../services/user.service";
 import {UserInterface} from "../interfaces/user.interface";
+import {MainPanelComponent} from "../partials/main-panel/main-panel.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [MainPanelComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

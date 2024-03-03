@@ -1,5 +1,3 @@
-<p>home works!</p>
-
 <button (click)="handleLogout()">Log out</button>
 
 @if(user) {
@@ -13,6 +11,7 @@
       <li>Account last update date: {{ user.updatedAt }}</li>
     </ul>
   </div>
+  <app-main-panel [user]="user" />
 }
 @else {
   <div>

@@ -1,8 +1,15 @@
 
-@if (action === "login") {
-  <app-login-form />
-} @else if (action === "register") {
-  <app-register-form />
-} @else {
-  <pre>Unknown error</pre>
+@switch (action) {
+  @case ('login') {
+    <app-login-form />
+  }
+  @case ('register') {
+    <app-register-form />
+  }
+  @case ('passwordreset') {
+    <pre>Not implemented yet</pre>
+  }
+  @default {
+    <app-login-form />
+  }
 }
