@@ -1,0 +1,19 @@
+<form [formGroup]="profileForm" (ngSubmit)="handleSubmit()">
+  <div id="meta">
+    <label>
+      Full name:
+      <input type="text" formControlName="fullname" [defaultValue]="profile?.fullname" />
+    </label>
+    <label>
+      Bio:
+      <textarea formControlName="bio" [defaultValue]="profile?.bio"></textarea>
+    </label>
+    <label>
+      Avatar url
+      <input type="text" formControlName="avatarUrl" [defaultValue]="profile?.avatarUrl" />
+    </label>
+  </div>
+  <div class="btn-container">
+    <button type="submit" [disabled]="!profileForm.valid">Save changes</button>
+  </div>
+</form>

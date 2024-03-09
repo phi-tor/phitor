@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon'
-import {BaseModel, column} from '@adonisjs/lucid/orm'
+import {BaseModel, afterFind, column} from '@adonisjs/lucid/orm'
+
+import User from "#models/user"
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -22,4 +24,20 @@ export default class Profile extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  /**
+   * not in a column, because it's set after the find query for get or update (cf. Profile.setUsername())
+   */
+  declare username: string
+
+  serializeExtras() {
+    return {
+      username: this.username
+    }
+  }
+
+  @afterFind()
+  static async setUsername(profile: Profile) {
+    profile.username = (await User.find(profile.userId))!.username
+  }
 }

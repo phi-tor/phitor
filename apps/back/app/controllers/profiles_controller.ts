@@ -5,7 +5,7 @@ import {updateProfileValidator} from "#validators/profile_validator"
 export default class ProfilesController {
   async get({ params, response }: HttpContext){
     const profile = await Profile.findOrFail(params['userId'])
-    return response.json(profile)
+    return response.json(profile.serialize())
   }
 
   /**
@@ -23,6 +23,6 @@ export default class ProfilesController {
     profile.merge(payload)
     await profile.save()
 
-    return response.json(profile)
+    return response.json(profile.serialize())
   }
 }

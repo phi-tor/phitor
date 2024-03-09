@@ -1,1 +1,19 @@
-<p>profile works!</p>
+
+@if(user?.id === userProfile?.userId) {
+  <button (click)="toggleEditorState()">{{ isEditorActive ? "Close" : "Edit profile" }}</button>
+
+  @if(isEditorActive) {
+    <app-profile-editor [profile]="userProfile!" />
+  }
+}
+
+@if(!isEditorActive) {
+  <h3>{{ userProfile?.fullname }}</h3>
+  <p>{{ '@' }}{{ userProfile?.username }}</p>
+  <p>Bio: {{ userProfile?.bio }}</p>
+  <p>Created on: {{ userProfile?.createdAt }} | Last profile update: {{ userProfile?.updatedAt }}</p>
+
+  <p>Image: {{ userProfile?.avatarUrl }}</p>
+
+  <p>User ID: {{ userProfile?.userId }}</p>
+}
