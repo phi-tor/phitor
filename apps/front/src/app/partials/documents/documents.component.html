@@ -4,7 +4,6 @@
 
 @if (isEditorActive) {
   <button (click)="closeEditor()">Close</button>
-  {{currentDocumentInEditor?.id}}
 
   <app-document-editor [user]="user" [document]="currentDocumentInEditor" [mode]="isCreating ? 'create' : 'update'" />
 }

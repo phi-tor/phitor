@@ -2,18 +2,11 @@
 @if(user) {
   <div>
     <h1>Welcome, {{ user.username }}</h1>
-    <ul>
-      <li>Id: {{ user.id }}</li>
-      <li>Email: {{ user.email }}</li>
-      <li>Lang: {{ user.lang }}</li>
-      <li>Account creation date: {{ user.createdAt }}</li>
-      <li>Account last update date: {{ user.updatedAt }}</li>
-    </ul>
   </div>
   <app-main-panel [user]="user" />
 }
 @else {
   <div>
-    <p>Please log in to view your profile.</p>
+    <p>Please log in to view your dashboard.</p>
   </div>
 }

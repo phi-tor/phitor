@@ -48,4 +48,8 @@ export class AppComponent implements OnInit {
         console.error(error)
       })
   }
+
+  toggleUserDataPanel() {
+    document.querySelector('#userData')?.classList.toggle('d-none')
+  }
 }

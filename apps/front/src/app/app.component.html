@@ -3,7 +3,19 @@
 
   @if(userService.getCurrentUser()) {
     <div>
-      <p>{{ userService.getCurrentUser()!.username }}</p>
+      <div>
+        <button (click)="toggleUserDataPanel()">{{ userService.getCurrentUser()!.username }}</button>
+        <div id="userData" class="d-none">
+          <ul>
+            <li>Id: {{ user!.id }}</li>
+            <li>Username: {{ user!.username }}</li>
+            <li>Email: {{ user!.email }}</li>
+            <li>Lang: {{ user!.lang }}</li>
+            <li>Account creation date: {{ user!.createdAt }}</li>
+            <li>Account last update date: {{ user!.updatedAt }}</li>
+          </ul>
+        </div>
+      </div>
       <button (click)="handleLogout()">Log out</button>
     </div>
   }
