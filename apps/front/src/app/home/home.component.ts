@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 
 import {UserService} from "../services/user.service";
@@ -12,7 +12,7 @@ import {MainPanelComponent} from "../partials/main-panel/main-panel.component";
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   user?: UserInterface
 
   constructor(

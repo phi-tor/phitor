@@ -1,7 +1,18 @@
 <nav>
   <a [routerLink]="['/']">Home</a>
-  <a href="/auth?action=login">Log in</a>
-  <a href="/auth?action=register">Register</a>
+
+  @if(userService.getCurrentUser()) {
+    <div>
+      <p>{{ userService.getCurrentUser()!.username }}</p>
+      <button (click)="handleLogout()">Log out</button>
+    </div>
+  }
+  @else {
+    <div>
+      <a href="/auth?action=login">Log in</a>
+      <a href="/auth?action=register">Register</a>
+    </div>
+  }
 </nav>
 
 <router-outlet></router-outlet>
