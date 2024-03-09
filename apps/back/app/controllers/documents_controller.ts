@@ -21,15 +21,36 @@ export default class DocumentsController {
     return response.json(newDoc)
   }
 
-  async get({ params }: HttpContext){
-    const id = params['id']
-    return await Document.findOrFail(id)
+  async get({ auth, response, params }: HttpContext){
+    const user = auth.getUserOrFail()
+    const doc = await Document.findOrFail(params['id'])
+
+    if(!doc.isPublic && doc.userId !== user.id) return response.status(401).send({msg: "this document isn't public"})
+
+    return doc
   }
 
-  async getBy({ params }: HttpContext){
-    return await Document
+  /**
+   * TODO: to optimize
+   */
+  async getBy({ auth, params }: HttpContext){
+    const user = auth.getUserOrFail()
+    const docs = await Document
       .query()
-      .where(params['key'], params['value']);
+      .where(params['key'], params['value'])
+
+    /**
+     * for each doc selected, verify if it's public or if it's current user's document, otherwise suppress it from the
+     * results
+     */
+    for (let i = 0; i < docs.length; i++) {
+      let doc = docs[i]
+      if(!doc.isPublic && doc.userId !== user.id) {
+        docs.splice(i)
+      }
+    }
+
+    return docs
   }
 
   async update({ auth, params, request, response }: HttpContext){
