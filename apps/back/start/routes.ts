@@ -50,6 +50,8 @@ router
   .group(() => {
     router.get('me', [UsersController, 'me']).as('me')
 
+    router.put('me/edit', [UsersController, 'updateUser']).as('updateUser')
+
     router.group(() => {
       router.get(':userId', [ProfilesController, 'get']).as('get')
 

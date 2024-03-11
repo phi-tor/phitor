@@ -9,6 +9,15 @@ export type createUserType = {
   terms: string
 }
 
+export type updateUserType = {
+  password: string
+  username?: string
+  email?: string
+  newPassword?: string
+  newPassword_confirmation?: string
+  lang?: string
+}
+
 export type loginUserType = {
   email: string
   password: string

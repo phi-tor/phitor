@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
 
 import {UserService} from "../../services/user.service";
 
@@ -13,7 +12,6 @@ import {UserService} from "../../services/user.service";
 })
 export class RegisterFormComponent {
   constructor(
-    private router: Router,
     private userService: UserService) {
   }
 
@@ -36,7 +34,7 @@ export class RegisterFormComponent {
       terms: this.registerForm.value.terms!
     }).subscribe(
       response => {
-        this.router.navigateByUrl('/')
+        window.location.href = '/'
       },
       error => {
         console.error(error)

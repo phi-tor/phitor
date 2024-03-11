@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import BaseService from "./base-service";
-import {createUserType, loginUserType} from "./service.interface";
+import {createUserType, loginUserType, updateUserType} from "./service.interface";
 import {UserInterface} from "../interfaces/user.interface";
 
 @Injectable({
@@ -34,6 +34,10 @@ export class UserService extends BaseService {
     return this.http.get<any>(this.API_BASE + "/users/me", {
       observe: 'response'
     })
+  }
+
+  updateUser(data: updateUserType) {
+    return this.http.put<any>(this.API_BASE + "/users/me/edit", data)
   }
 
   logoutUser() {

@@ -1,1 +1,37 @@
-<p>settings works!</p>
+
+<h3>Account information</h3>
+
+<form [formGroup]="updateUserForm" (ngSubmit)="handleSubmit()">
+  <label>
+    Password (mandatory for editing user data)
+    <input type="password" formControlName="password" />
+  </label>
+  <label>
+    Username
+    <input type="text" formControlName="username" placeholder="{{ user?.username }}" />
+  </label>
+  <label>
+    Email
+    <input type="email" formControlName="email" placeholder="{{ user?.email }}" />
+  </label>
+  <label>
+    New password
+    <input type="password" formControlName="newPassword" />
+  </label>
+  <label>
+    New password confirmation
+    <input type="password" formControlName="newPasswordConfirmation" />
+  </label>
+  <label>
+    Lang
+    <select formControlName="lang">
+      <option value="en">EN</option>
+      <option value="fr">FR</option>
+    </select>
+  </label>
+  <div class="btn-container">
+    <button type="submit" [disabled]="!updateUserForm.valid">Save</button>
+  </div>
+</form>
+
+<button>I forgot my password</button>
