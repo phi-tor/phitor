@@ -6,7 +6,7 @@ export interface ProfileInterface {
    * Nota: this field isn't stored in db, it's only added artificially in the object after the fetch in the db (cf.
    * `/apps/back/app/models/profile.ts`).
    */
-  username: string
+  username?: string
   fullname: string
   bio: string
   avatarUrl: string

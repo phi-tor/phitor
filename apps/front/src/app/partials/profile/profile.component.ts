@@ -33,6 +33,7 @@ export class ProfileComponent implements OnInit {
 
     if(this.userId === this.user?.id) {  // avoid useless request to the API
       this.userProfile = this.user?.profile
+      this.userProfile!.username = this.user?.username
     } else {
       this.getProfile()
     }
@@ -50,6 +51,7 @@ export class ProfileComponent implements OnInit {
     this.profileService.getProfile(this.userId!).subscribe(
       response => {
         this.userProfile = response
+        console.log(this.userProfile?.username)
       },
       error => {
         console.log(error)
