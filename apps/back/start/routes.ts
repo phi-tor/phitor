@@ -59,6 +59,17 @@ router
     })
       .prefix('profiles')
       .as('profiles')
+
+    router.group(() => {
+      router.post('', [UsersController, 'followUser']).as('create')
+
+      /**
+       * The id param stands for the Follow id
+       */
+      router.delete(':id', [UsersController, 'stopFollowingUser']).as('delete')
+    })
+      .prefix('follows')
+      .as('follows')
   })
   .prefix('users')
   .as('users')
@@ -79,6 +90,18 @@ router
     router.put(':id', [DocumentsController, 'update']).as('update')
 
     router.delete(':id', [DocumentsController, 'delete']).as('delete')
+
+    router
+      .group(() => {
+        /**
+         * for those 2 routes, the id param stands for document.id
+         */
+        router.post(':id', [DocumentsController, 'like']).as('like')
+
+        router.delete(':id', [DocumentsController, 'deleteLike']).as('deleteLike')
+      })
+      .prefix('likes')
+      .as('likes')
   })
   .prefix('documents')
   .as('documents')

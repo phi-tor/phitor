@@ -9,6 +9,8 @@ import {AccessToken, DbAccessTokensProvider} from "@adonisjs/auth/access_tokens"
 import Document from "#models/document"
 import Profile from "#models/profile"
 import Badge from "#models/badge"
+import Like from "#models/like"
+import Follow from "#models/follow"
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['username', 'email'],
@@ -48,7 +50,13 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare badges: HasMany<typeof Badge>
 
   @hasOne(() => Profile, { serializeAs: 'profile' })
-  declare profileId: HasOne<typeof Profile>
+  declare profile: HasOne<typeof Profile>
+
+  @hasMany(() => Like, { serializeAs: 'likes' })
+  declare likes: HasMany<typeof Like>
+
+  @hasMany(() => Follow, { serializeAs: 'follows' })
+  declare follows: HasMany<typeof Follow>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

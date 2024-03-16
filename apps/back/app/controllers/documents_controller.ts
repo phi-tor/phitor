@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Document from "#models/document";
-import {createDocumentValidator, updateDocumentValidator} from "#validators/document_validator";
+import Document from "#models/document"
+import Like from "#models/like"
+import {createDocumentValidator, updateDocumentValidator} from "#validators/document_validator"
 
 export default class DocumentsController {
   async create({ auth, request, response }: HttpContext){
@@ -77,5 +78,39 @@ export default class DocumentsController {
 
     await doc.delete()
     return response.status(200)
+  }
+
+  async like({ auth, params, response }: HttpContext){
+    const user = auth.getUserOrFail()
+    const documentToLike = await Document.findOrFail(params['id'])
+
+    if(user.id === documentToLike.userId) return response.status(401).send({msg: "You can't like your documents"})
+
+    const likedByUser = await Like.query().where('user_id', user.id).where('document_id', documentToLike.id)
+
+    if(likedByUser[0] !== undefined) return response.status(401).send({msg: "You liked this document already."})
+
+    const newLike = await Like.create({
+      userId: user.id,
+      documentId: documentToLike.id
+    })
+    await newLike.save()
+
+    return response.status(200).send({msg: "Document liked"})
+  }
+
+  async deleteLike({ auth, params, response }: HttpContext){
+    const user = auth.getUserOrFail()
+    const likeToDelete = await Like.query()
+      .where('user_id', user.id)
+      .where('document_id', params['id'])
+      .first()
+
+    if(likeToDelete === undefined) return response.status(404).send({msg: "Like not found"})
+
+    if(user.id !== likeToDelete!.userId) return response.status(401).send({msg: "You can't remove a like of another user."})
+
+    await likeToDelete!.delete()
+    return response.status(200).send({msg: "Like removed"})
   }
 }

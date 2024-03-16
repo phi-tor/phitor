@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import hash from "@adonisjs/core/services/hash"
 
 import User from "#models/user"
+import Follow from "#models/follow"
 import {updateUserValidator} from "#validators/user_validator"
 
 export default class UsersController {
@@ -11,8 +12,10 @@ export default class UsersController {
       .query()
       .where('id', userId)
       .preload('documents')
-      .preload('profileId')
+      .preload('profile')
       .preload('badges')
+      .preload('likes')
+      .preload('follows')
     return response.json(user)
   }
 
@@ -36,5 +39,38 @@ export default class UsersController {
     await user.save()
 
     return response.status(200)
+  }
+
+  async followUser({ auth, request, response }: HttpContext){
+    const user = auth.getUserOrFail()
+    const userToFollowId = request.body()['userToFollowId']
+
+    if(user.id === userToFollowId) return response.status(401).send({msg: "You can't follow yourself."})
+
+    const followedByUser = await Follow.query()
+      .where('user_id', user.id)
+      .where('followed_id', userToFollowId)
+
+    if(followedByUser[0] !== undefined) return response.status(401).send({msg: "User already followed."})
+
+    const newFollow = await Follow.create({
+      userId: user.id,
+      followedId: userToFollowId,
+      src: request.body()['src']
+    })
+    await newFollow.save()
+
+    return response.status(201).send({msg: "User followed"})
+  }
+
+  async stopFollowingUser({ auth, params, response }: HttpContext){
+    const user = auth.getUserOrFail()
+    const follow = await Follow.findOrFail(params['id'])
+
+    if(user.id !== follow.userId) return response.status(401).send({msg: "You cannot remove another user's follow."})
+
+    await follow.delete()
+
+    return response.status(200).send({msg: "Follow removed"})
   }
 }
