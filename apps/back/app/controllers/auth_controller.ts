@@ -43,6 +43,6 @@ export default class AuthController {
     const user = auth.getUserOrFail()
     await User.accessTokens.delete(user, user.currentAccessToken!.identifier)
 
-    return response.status(200).send({msg: 'logout'})
+    return response.status(200).send({msg: 'Successfully logout'})
   }
 }

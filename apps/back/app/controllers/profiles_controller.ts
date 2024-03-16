@@ -15,7 +15,7 @@ export default class ProfilesController {
     const user = auth.getUserOrFail()
     const profile = await Profile.findOrFail(params['userId'])
 
-    if(user.id !== profile.userId) return response.status(401)
+    if(user.id !== profile.userId) return response.status(403).send({msg: "You can't update another user's profile"})
 
     const data = request.all()
     const payload = await updateProfileValidator.validate(data)

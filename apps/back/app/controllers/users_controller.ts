@@ -25,7 +25,7 @@ export default class UsersController {
     const payload = await updateUserValidator.validate(data)
 
     if(!(await hash.verify(user.password, payload.password))) {
-      return response.status(401).send({
+      return response.status(403).send({
         msg: "You must enter your current password to update your account (if you forgot it, click on 'I forgot my password' button)."
       })
     }
@@ -45,13 +45,13 @@ export default class UsersController {
     const user = auth.getUserOrFail()
     const userToFollowId = request.body()['userToFollowId']
 
-    if(user.id === userToFollowId) return response.status(401).send({msg: "You can't follow yourself."})
+    if(user.id === userToFollowId) return response.status(403).send({msg: "You can't follow yourself."})
 
     const followedByUser = await Follow.query()
       .where('user_id', user.id)
       .where('followed_id', userToFollowId)
 
-    if(followedByUser[0] !== undefined) return response.status(401).send({msg: "User already followed."})
+    if(followedByUser[0] !== undefined) return response.status(403).send({msg: "User already followed."})
 
     const newFollow = await Follow.create({
       userId: user.id,
@@ -67,7 +67,7 @@ export default class UsersController {
     const user = auth.getUserOrFail()
     const follow = await Follow.findOrFail(params['id'])
 
-    if(user.id !== follow.userId) return response.status(401).send({msg: "You cannot remove another user's follow."})
+    if(user.id !== follow.userId) return response.status(403).send({msg: "You cannot remove another user's follow."})
 
     await follow.delete()
 

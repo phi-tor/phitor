@@ -26,7 +26,8 @@ export default class DocumentsController {
     const user = auth.getUserOrFail()
     const doc = await Document.findOrFail(params['id'])
 
-    if(!doc.isPublic && doc.userId !== user.id) return response.status(401).send({msg: "this document isn't public"})
+    // raise 404 error if document is private and the user is not the author of it
+    if(!doc.isPublic && doc.userId !== user.id) return response.status(404).send({msg: "document not found"})
 
     return doc
   }
@@ -59,7 +60,7 @@ export default class DocumentsController {
     const doc = await Document.findOrFail(params['id'])
 
     // a user tries to update a doc of another
-    if(doc.userId !== user.id) return response.status(401)
+    if(doc.userId !== user.id) return response.status(403).send({msg: "You can't update another user's documents"})
 
     const data = request.all()
     const payload = await updateDocumentValidator.validate(data)
@@ -74,7 +75,7 @@ export default class DocumentsController {
     const user = auth.getUserOrFail()
     const doc = await Document.findOrFail(params['id'])
 
-    if(doc.userId !== user.id) return response.status(401)
+    if(doc.userId !== user.id) return response.status(403).send({msg: "You can't delete another user's documents"})
 
     await doc.delete()
     return response.status(200)
@@ -84,11 +85,11 @@ export default class DocumentsController {
     const user = auth.getUserOrFail()
     const documentToLike = await Document.findOrFail(params['id'])
 
-    if(user.id === documentToLike.userId) return response.status(401).send({msg: "You can't like your documents"})
+    if(user.id === documentToLike.userId) return response.status(403).send({msg: "You can't like your documents"})
 
     const likedByUser = await Like.query().where('user_id', user.id).where('document_id', documentToLike.id)
 
-    if(likedByUser[0] !== undefined) return response.status(401).send({msg: "You liked this document already."})
+    if(likedByUser[0] !== undefined) return response.status(403).send({msg: "You liked this document already."})
 
     const newLike = await Like.create({
       userId: user.id,
@@ -108,7 +109,7 @@ export default class DocumentsController {
 
     if(likeToDelete === undefined) return response.status(404).send({msg: "Like not found"})
 
-    if(user.id !== likeToDelete!.userId) return response.status(401).send({msg: "You can't remove a like of another user."})
+    if(user.id !== likeToDelete!.userId) return response.status(403).send({msg: "You can't remove a like of another user."})
 
     await likeToDelete!.delete()
     return response.status(200).send({msg: "Like removed"})
