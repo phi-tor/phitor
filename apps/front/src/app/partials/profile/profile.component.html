@@ -23,10 +23,7 @@
   <div>
     <h4>{{ '@' }}{{ userProfile?.username }} follows</h4>
     @for(following of userProfile?.following; track following.userId) {
-      <div>
-        <h5>{{ following.fullname }}</h5>
-        <p>{{ following.bio }}</p>
-      </div>
+      <app-profile-item [profile]="following" (viewProfile)="changeProfile($event)" />
     }
   </div>
 

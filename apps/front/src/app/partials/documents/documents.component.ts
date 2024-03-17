@@ -4,11 +4,15 @@ import {UserInterface} from "../../interfaces/user.interface";
 import {DocumentService} from "../../services/document.service";
 import {DocumentInterface} from "../../interfaces/document.interface";
 import {DocumentEditorComponent} from "./document-editor/document-editor.component";
+import {DocumentItemComponent} from "../../components/document-item/document-item.component";
 
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [DocumentEditorComponent],
+  imports: [
+    DocumentEditorComponent,
+    DocumentItemComponent,
+  ],
   templateUrl: './documents.component.html',
   styleUrl: './documents.component.css'
 })

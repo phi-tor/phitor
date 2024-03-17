@@ -1,10 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 import {UserInterface} from "../../interfaces/user.interface";
 import {ProfileInterface} from "../../interfaces/profile.interface";
 import {ProfileService} from "../../services/profile.service";
 import {ProfileEditorComponent} from "./profile-editor/profile-editor.component";
+import {ProfileItemComponent} from "../../components/profile-item/profile-item.component";
 import {FollowBtnComponent} from "../../components/follow-btn/follow-btn.component";
 
 @Component({
@@ -12,6 +13,7 @@ import {FollowBtnComponent} from "../../components/follow-btn/follow-btn.compone
   standalone: true,
   imports: [
     ProfileEditorComponent,
+    ProfileItemComponent,
     FollowBtnComponent,
   ],
   templateUrl: './profile.component.html',
@@ -25,6 +27,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private profileService: ProfileService,
   ) {
   }
@@ -52,5 +55,14 @@ export class ProfileComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+
+  changeProfile(id: number) {
+    this.userId = id
+    this.getProfile()
+    this.router.navigate([], {
+      queryParams: { userId: id },
+      queryParamsHandling: 'merge'
+    })
   }
 }
