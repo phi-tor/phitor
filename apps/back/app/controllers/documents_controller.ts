@@ -2,6 +2,8 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Document from "#models/document"
 import Like from "#models/like"
 import {createDocumentValidator, updateDocumentValidator} from "#validators/document_validator"
+import DocumentPolicy from "#policies/document_policy"
+import LikePolicy from "#policies/like_policy"
 
 export default class DocumentsController {
   async create({ auth, request, response }: HttpContext){
@@ -22,12 +24,13 @@ export default class DocumentsController {
     return response.json(newDoc)
   }
 
-  async get({ auth, response, params }: HttpContext){
-    const user = auth.getUserOrFail()
+  async get({ bouncer, response, params }: HttpContext){
     const doc = await Document.findOrFail(params['id'])
 
     // raise 404 error if document is private and the user is not the author of it
-    if(!doc.isPublic && doc.userId !== user.id) return response.status(404).send({msg: "document not found"})
+    if(await bouncer.with(DocumentPolicy).denies('read', doc)) {
+      return response.notFound({msg: "document not found"})
+    }
 
     return doc
   }
@@ -35,8 +38,7 @@ export default class DocumentsController {
   /**
    * TODO: to optimize
    */
-  async getBy({ auth, params }: HttpContext){
-    const user = auth.getUserOrFail()
+  async getBy({ bouncer, params }: HttpContext){
     const docs = await Document
       .query()
       .where(params['key'], params['value'])
@@ -47,7 +49,7 @@ export default class DocumentsController {
      */
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i]
-      if(!doc.isPublic && doc.userId !== user.id) {
+      if(await bouncer.with(DocumentPolicy).denies('read', doc)) {
         docs.splice(i)
       }
     }
@@ -55,12 +57,13 @@ export default class DocumentsController {
     return docs
   }
 
-  async update({ auth, params, request, response }: HttpContext){
-    const user = auth.getUserOrFail()
+  async update({ bouncer, params, request, response }: HttpContext){
     const doc = await Document.findOrFail(params['id'])
 
     // a user tries to update a doc of another
-    if(doc.userId !== user.id) return response.status(403).send({msg: "You can't update another user's documents"})
+    if(await bouncer.with(DocumentPolicy).denies('update', doc)) {
+      return response.forbidden({msg: "You can't update another user's documents"})
+    }
 
     const data = request.all()
     const payload = await updateDocumentValidator.validate(data)
@@ -71,25 +74,25 @@ export default class DocumentsController {
     return response.json(doc)
   }
 
-  async delete({ auth, params, response }: HttpContext){
-    const user = auth.getUserOrFail()
+  async delete({ bouncer, params, response }: HttpContext){
     const doc = await Document.findOrFail(params['id'])
 
-    if(doc.userId !== user.id) return response.status(403).send({msg: "You can't delete another user's documents"})
+    if(await bouncer.with(DocumentPolicy).denies('delete', doc)) {
+      return response.forbidden({msg: "You can't delete another user's documents"})
+    }
 
     await doc.delete()
     return response.status(200)
   }
 
-  async like({ auth, params, response }: HttpContext){
+  async like({ auth, bouncer, params, response }: HttpContext){
     const user = auth.getUserOrFail()
     const documentToLike = await Document.findOrFail(params['id'])
+    const likedByUser = await Like.query().where('user_id', user.id).where('document_id', documentToLike.id).first()
 
-    if(user.id === documentToLike.userId) return response.status(403).send({msg: "You can't like your documents"})
-
-    const likedByUser = await Like.query().where('user_id', user.id).where('document_id', documentToLike.id)
-
-    if(likedByUser[0] !== undefined) return response.status(403).send({msg: "You liked this document already."})
+    if(await bouncer.with(LikePolicy).denies('create', documentToLike, likedByUser !== undefined)) {
+      return response.forbidden({msg: "You can't like your own documents OR You liked this document already."})
+    }
 
     const newLike = await Like.create({
       userId: user.id,
@@ -100,7 +103,7 @@ export default class DocumentsController {
     return response.status(200).send({msg: "Document liked"})
   }
 
-  async deleteLike({ auth, params, response }: HttpContext){
+  async deleteLike({ auth, bouncer, params, response }: HttpContext){
     const user = auth.getUserOrFail()
     const likeToDelete = await Like.query()
       .where('user_id', user.id)
@@ -109,7 +112,9 @@ export default class DocumentsController {
 
     if(likeToDelete === undefined) return response.status(404).send({msg: "Like not found"})
 
-    if(user.id !== likeToDelete!.userId) return response.status(403).send({msg: "You can't remove a like of another user."})
+    if(await bouncer.with(LikePolicy).denies('delete', likeToDelete!)) {
+      return response.forbidden({msg: "You can't remove a like of another user."})
+    }
 
     await likeToDelete!.delete()
     return response.status(200).send({msg: "Like removed"})

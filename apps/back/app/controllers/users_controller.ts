@@ -4,6 +4,7 @@ import hash from "@adonisjs/core/services/hash"
 import User from "#models/user"
 import Follow from "#models/follow"
 import {updateUserValidator} from "#validators/user_validator"
+import UserPolicy from "#policies/user_policy"
 
 export default class UsersController {
   async me({ auth, response }: HttpContext){
@@ -63,16 +64,18 @@ export default class UsersController {
     return response.status(201).send({msg: "User followed"})
   }
 
-  async stopFollowingUser({ auth, params, response }: HttpContext){
+  async stopFollowingUser({ auth, bouncer, params, response }: HttpContext){
     const user = auth.getUserOrFail()
     const follow = await Follow.query()
       .where('user_id', user.id)
       .where('followed_id', params['id'])
       .first()
 
-    if(user.id !== follow?.userId) return response.status(403).send({msg: "You cannot remove another user's follow."})
+    if(await bouncer.with(UserPolicy).denies('unFollow', follow!.userId)) {
+      return response.forbidden({msg: "You cannot remove another user's follow."})
+    }
 
-    await follow.delete()
+    await follow!.delete()
 
     return response.status(200).send({msg: "Follow removed"})
   }

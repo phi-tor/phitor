@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Profile from "#models/profile"
 import {updateProfileValidator} from "#validators/profile_validator"
+import ProfilePolicy from "#policies/profile_policy"
 
 export default class ProfilesController {
   async get({ params, response }: HttpContext){
@@ -11,11 +12,12 @@ export default class ProfilesController {
   /**
    * TODO: handle file upload for avatar, it's only supporting url now
    */
-  async update({ auth, params, request, response }: HttpContext){
-    const user = auth.getUserOrFail()
+  async update({ bouncer, params, request, response }: HttpContext){
     const profile = await Profile.findOrFail(params['userId'])
 
-    if(user.id !== profile.userId) return response.status(403).send({msg: "You can't update another user's profile"})
+    if(await bouncer.with(ProfilePolicy).denies('update', profile)) {
+      return response.forbidden({msg: "You can't update another user's profile"})
+    }
 
     const data = request.all()
     const payload = await updateProfileValidator.validate(data)
