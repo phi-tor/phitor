@@ -28,4 +28,6 @@
   </div>
 
   <p>User ID: {{ userProfile?.userId }}</p>
+
+  <app-share-btn [action]="'profile'" [params]="{userId: userId}" />
 }

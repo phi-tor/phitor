@@ -1,10 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DocumentInterface} from "../../interfaces/document.interface";
+import {ShareBtnComponent} from "../share-btn/share-btn.component";
 
 @Component({
   selector: 'app-document-item',
   standalone: true,
-  imports: [],
+  imports: [
+    ShareBtnComponent,
+  ],
   templateUrl: './document-item.component.html',
   styleUrl: './document-item.component.css'
 })

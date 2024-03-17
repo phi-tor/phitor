@@ -7,6 +7,7 @@ import {ProfileService} from "../../services/profile.service";
 import {ProfileEditorComponent} from "./profile-editor/profile-editor.component";
 import {ProfileItemComponent} from "../../components/profile-item/profile-item.component";
 import {FollowBtnComponent} from "../../components/follow-btn/follow-btn.component";
+import {ShareBtnComponent} from "../../components/share-btn/share-btn.component";
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +16,7 @@ import {FollowBtnComponent} from "../../components/follow-btn/follow-btn.compone
     ProfileEditorComponent,
     ProfileItemComponent,
     FollowBtnComponent,
+    ShareBtnComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'

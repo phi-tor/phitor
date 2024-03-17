@@ -1,6 +1,8 @@
 <div>
   <button (click)="handleOpenEditorEvent()">Edit</button>
   <button (click)="handleDeleteDocumentEvent()">Delete</button>
+  <app-share-btn [action]="'documents'" [params]="{docId: doc.id}" />
+
   <h3>Title: {{ doc.title }}</h3>
   <p>Lang: {{ doc.lang }}</p>
   <p>Public: {{ doc.isPublic ? "yes" : "no" }}</p>

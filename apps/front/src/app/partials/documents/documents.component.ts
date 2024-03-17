@@ -5,6 +5,7 @@ import {DocumentService} from "../../services/document.service";
 import {DocumentInterface} from "../../interfaces/document.interface";
 import {DocumentEditorComponent} from "./document-editor/document-editor.component";
 import {DocumentItemComponent} from "../../components/document-item/document-item.component";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-documents',
@@ -35,7 +36,11 @@ export class DocumentsComponent implements OnInit {
     isPublic: false
   }
 
-  constructor(private documentService: DocumentService) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private documentService: DocumentService
+  ) {
   }
 
   ngOnInit() {
@@ -46,7 +51,21 @@ export class DocumentsComponent implements OnInit {
     this.documentService.getDocumentBy('userId', this.user?.id).subscribe(
     response => {
       this.documents = response
-      this.currentDocumentInEditor = response[0]
+
+      const docIdParam = this.route.snapshot.queryParamMap.get('docId')
+      if(docIdParam) {
+        const docId = parseInt(docIdParam)
+
+        for(let i = 0; i < this.documents.length; i++) {
+          let doc = this.documents[i]
+          if(doc.id === docId) {
+            this.currentDocumentInEditor = doc
+          }
+        }
+        this.isEditorActive = true
+      } else {
+        this.currentDocumentInEditor = response[0]
+      }
     },
     error => {
       console.log(error)
@@ -61,6 +80,13 @@ export class DocumentsComponent implements OnInit {
 
   closeEditor() {
     this.isEditorActive = false
+
+    // remove the shared doc id from query params
+    this.router.navigate([], {
+      queryParams: { docId: null, share: null },
+      queryParamsHandling: 'merge'
+    })
+
     this.getDocuments()  // refresh the list of docs bc one of them just was created/updated
   }
 

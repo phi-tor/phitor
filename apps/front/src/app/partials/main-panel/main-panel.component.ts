@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 import {UserInterface} from "../../interfaces/user.interface";
 import {FeedComponent} from "../feed/feed.component";
@@ -27,16 +27,27 @@ export class MainPanelComponent implements OnInit {
   @Input() user?: UserInterface
   action?: string  // feed, documents, dictionary, quizz, settings, profile
 
-  constructor(private route: ActivatedRoute) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
   }
 
   ngOnInit() {
     const actionParam = this.route.snapshot.queryParamMap.get('action')
     this.action = actionParam ? actionParam : "feed"
+    this.router.navigate([], {
+      queryParams: { action: this.action },
+      queryParamsHandling: 'merge'
+    })
   }
 
   changeAction(newAction: string) {
     // change ?action in url
     this.action = newAction
+    this.router.navigate([], {
+      queryParams: { action: this.action },
+      queryParamsHandling: 'merge'
+    })
   }
 }
