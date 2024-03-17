@@ -8,12 +8,27 @@
 }
 
 @if(!isEditorActive) {
+  @if(user?.id !== userProfile?.userId) {
+    <app-follow-btn [user]="user!" [userId]="userId!" />
+  }
+
   <h3>{{ userProfile?.fullname }}</h3>
   <p>{{ '@' }}{{ userProfile?.username }}</p>
+  <p>{{ userProfile?.followers }} followers | {{ userProfile?.following?.length }} following</p>
   <p>Bio: {{ userProfile?.bio }}</p>
   <p>Created on: {{ userProfile?.createdAt }} | Last profile update: {{ userProfile?.updatedAt }}</p>
 
   <p>Image: {{ userProfile?.avatarUrl }}</p>
+
+  <div>
+    <h4>{{ '@' }}{{ userProfile?.username }} follows</h4>
+    @for(following of userProfile?.following; track following.userId) {
+      <div>
+        <h5>{{ following.fullname }}</h5>
+        <p>{{ following.bio }}</p>
+      </div>
+    }
+  </div>
 
   <p>User ID: {{ userProfile?.userId }}</p>
 }

@@ -12,4 +12,6 @@ export interface UserInterface {
   documents?: DocumentInterface[]
   profile?: ProfileInterface
   badges?: BadgeInterface[]
+  likes?: any[]
+  follows?: any[]
 }

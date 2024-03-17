@@ -64,7 +64,7 @@ router
       router.post('', [UsersController, 'followUser']).as('create')
 
       /**
-       * The id param stands for the Follow id
+       * The id param stands for the follower user id
        */
       router.delete(':id', [UsersController, 'stopFollowingUser']).as('delete')
     })

@@ -65,9 +65,12 @@ export default class UsersController {
 
   async stopFollowingUser({ auth, params, response }: HttpContext){
     const user = auth.getUserOrFail()
-    const follow = await Follow.findOrFail(params['id'])
+    const follow = await Follow.query()
+      .where('user_id', user.id)
+      .where('followed_id', params['id'])
+      .first()
 
-    if(user.id !== follow.userId) return response.status(403).send({msg: "You cannot remove another user's follow."})
+    if(user.id !== follow?.userId) return response.status(403).send({msg: "You cannot remove another user's follow."})
 
     await follow.delete()
 

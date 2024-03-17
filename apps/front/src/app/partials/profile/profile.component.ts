@@ -5,12 +5,14 @@ import {UserInterface} from "../../interfaces/user.interface";
 import {ProfileInterface} from "../../interfaces/profile.interface";
 import {ProfileService} from "../../services/profile.service";
 import {ProfileEditorComponent} from "./profile-editor/profile-editor.component";
+import {FollowBtnComponent} from "../../components/follow-btn/follow-btn.component";
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
     ProfileEditorComponent,
+    FollowBtnComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -30,13 +32,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     const userIdParam = this.route.snapshot.queryParamMap.get('userId')
     this.userId = userIdParam ? parseInt(userIdParam) : this.user?.id
-
-    if(this.userId === this.user?.id) {  // avoid useless request to the API
-      this.userProfile = this.user?.profile
-      this.userProfile!.username = this.user?.username
-    } else {
-      this.getProfile()
-    }
+    this.getProfile()
   }
 
   toggleEditorState() {
@@ -51,7 +47,6 @@ export class ProfileComponent implements OnInit {
     this.profileService.getProfile(this.userId!).subscribe(
       response => {
         this.userProfile = response
-        console.log(this.userProfile?.username)
       },
       error => {
         console.log(error)
