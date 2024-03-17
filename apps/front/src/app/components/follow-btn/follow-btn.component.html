@@ -1,0 +1,5 @@
+@if(isCurrentUserFollowsProfileOwner) {
+  <button (click)="stopFollow()">Unfollow</button>
+} @else {
+  <button (click)="follow()">Follow</button>
+}
