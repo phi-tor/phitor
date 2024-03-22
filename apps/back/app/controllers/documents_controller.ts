@@ -25,32 +25,34 @@ export default class DocumentsController {
   }
 
   async get({ bouncer, response, params }: HttpContext){
-    const doc = await Document.findOrFail(params['id'])
+    const doc = await Document.query().where('id', params['id']).first()
 
     // raise 404 error if document is private and the user is not the author of it
-    if(await bouncer.with(DocumentPolicy).denies('read', doc)) {
+    if(!doc || await bouncer.with(DocumentPolicy).denies('read', doc)) {
       return response.notFound({msg: "document not found"})
     }
 
-    return doc
+    return doc.serialize()
   }
 
   /**
    * TODO: to optimize
    */
-  async getBy({ bouncer, params }: HttpContext){
-    const docs = await Document
+  async getBy({ bouncer, params, request }: HttpContext){
+    const docsFromDb = await Document
       .query()
       .where(params['key'], params['value'])
+      .paginate(request.input('page') ? request.input('page') : 1, 10)
+    const docs = []
 
     /**
      * for each doc selected, verify if it's public or if it's current user's document, otherwise suppress it from the
      * results
      */
-    for (let i = 0; i < docs.length; i++) {
-      let doc = docs[i]
-      if(await bouncer.with(DocumentPolicy).denies('read', doc)) {
-        docs.splice(i)
+    for (let i = 0; i < docsFromDb.length; i++) {
+      let doc = docsFromDb[i]
+      if(!await bouncer.with(DocumentPolicy).denies('read', doc)) {
+        docs.push(doc.serialize())
       }
     }
 
@@ -90,7 +92,7 @@ export default class DocumentsController {
     const documentToLike = await Document.findOrFail(params['id'])
     const likedByUser = await Like.query().where('user_id', user.id).where('document_id', documentToLike.id).first()
 
-    if(await bouncer.with(LikePolicy).denies('create', documentToLike, likedByUser !== undefined)) {
+    if(await bouncer.with(LikePolicy).denies('create', documentToLike, likedByUser !== null)) {
       return response.forbidden({msg: "You can't like your own documents OR You liked this document already."})
     }
 

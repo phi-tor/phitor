@@ -8,6 +8,7 @@ export interface DocumentInterface {
   tags?: string
   content: string
   isPublic: boolean
+  likes: any[]
   createdAt: string
   updatedAt: string
 }

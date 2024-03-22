@@ -33,7 +33,8 @@ export class DocumentsComponent implements OnInit {
     description: "",
     tags: "",
     content: "",
-    isPublic: false
+    isPublic: false,
+    likes: [],
   }
 
   constructor(
